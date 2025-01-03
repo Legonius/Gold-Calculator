@@ -69,7 +69,7 @@ export default function HomeScreen() {
     addHistoryItem({
       item: "default",
       weight: goldWeight,
-      price: totalPrice,
+      price: Math.floor(totalGoldPrice + Number(ayawtTwat)),
     });
     return hasError;
   };

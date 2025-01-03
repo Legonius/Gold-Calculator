@@ -10,13 +10,14 @@ import { useHistory } from "@/HistoryContext";
 
 export default function TabTwoScreen() {
   const { history } = useHistory();
+
   return (
     <ThemedView style={styles.container}>
-      {history.map(({ item, weight, price }) => (
-        <ThemedView style={styles.box}>
+      {history.map(({ item, weight, price }, index) => (
+        <ThemedView key={index} style={styles.box}>
           <ThemedText>{item}</ThemedText>
           <ThemedText>{weight}</ThemedText>
-          <ThemedText>{price}</ThemedText>
+          <ThemedText>{price.toLocaleString()}</ThemedText>
         </ThemedView>
       ))}
     </ThemedView>
