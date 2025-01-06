@@ -1,7 +1,18 @@
 // context/HistoryContext.tsx
 import React, { createContext, useContext, useState } from "react";
 
-type HistoryItem = { item: string; weight: number; price: number };
+enum goldTypes {
+  a = 16,
+  b = 15,
+  c = 14.5,
+}
+
+type HistoryItem = {
+  item: string;
+  weight: number;
+  price: number;
+  types: number;
+};
 type HistoryContextType = {
   history: HistoryItem[];
   addHistoryItem: (item: HistoryItem) => void;
@@ -14,7 +25,12 @@ export const HistoryProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [history, setHistory] = useState<HistoryItem[]>([
-    { item: "ring", weight: 24, price: 250000 },
+    { item: "ring", weight: 24, price: 250000, types: 16 },
+    { item: "ring", weight: 24, price: 250000, types: 16 },
+    { item: "ring", weight: 24, price: 250000, types: 15 },
+    { item: "ring", weight: 24, price: 250000, types: 16 },
+    { item: "ring", weight: 24, price: 250000, types: 14.5 },
+    { item: "ring", weight: 24, price: 250000, types: 16 },
   ]);
 
   const addHistoryItem = (item: HistoryItem) => {
@@ -23,6 +39,11 @@ export const HistoryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const clearHistory = () => {
     setHistory([]);
+  };
+
+  const editItem = (id: number, item: string) => {
+    const newHistory = history.map((item) => item.price === id);
+    setHistory;
   };
 
   return (
