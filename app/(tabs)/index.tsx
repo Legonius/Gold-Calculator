@@ -106,7 +106,7 @@ export default function HomeScreen() {
     }
   };
   useEffect(() => {
-    getData("goldPrice").then((data) => setGoldPrice(data));
+    getData("goldPrice").then((data) => setGoldPrice(data || ""));
   }, []);
 
   return (

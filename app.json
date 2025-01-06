@@ -4,7 +4,7 @@
     "slug": "GoldCalculator",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/calcu.jpg",
+    "icon": "./assets/images/coffee-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,9 +13,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/calcu.jpg",
+        "foregroundImage": "./assets/images/coffee-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.legonius.GoldCalculator"
     },
     "web": {
       "bundler": "metro",
@@ -27,7 +28,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/cal-splash.jpg",
+          "image": "./assets/images/coffee-splash.png",
           "imageWidth": "100%",
           "resizeMode": "cover",
           "backgroundColor": "#ffffff"
@@ -36,6 +37,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "edd3ef82-d0bc-48d7-b8d4-291199828315"
+      }
     }
   }
 }
