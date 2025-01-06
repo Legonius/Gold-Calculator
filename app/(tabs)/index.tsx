@@ -15,10 +15,11 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useHistory } from "@/HistoryContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen() {
   const colorTheme = useThemeColor({ light: "black", dark: "white" }, "text");
@@ -82,7 +83,31 @@ export default function HomeScreen() {
       types,
     });
     setModalVisible(false);
+    storeData("goldPrice", goldPrice);
   };
+
+  // Save data
+  const storeData = async (key: string, value: number) => {
+    try {
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+      console.log("Data saved");
+    } catch (e) {
+      console.error("Failed to save the data", e);
+    }
+  };
+
+  // Retrieve data
+  const getData = async (key: string) => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      return value ? JSON.parse(value) : null;
+    } catch (e) {
+      console.error("Failed to fetch the data", e);
+    }
+  };
+  useEffect(() => {
+    getData("goldPrice").then((data) => setGoldPrice(data));
+  }, []);
 
   return (
     <KeyboardAvoidingView

@@ -4,6 +4,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
+  View,
   StatusBar,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
@@ -11,10 +12,12 @@ import { ThemedView } from "@/components/ThemedView";
 import { useHistory } from "@/HistoryContext";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
+import { useColorScheme } from "@/hooks/useColorScheme.web";
 
 export default function TabTwoScreen() {
   const { history, clearHistory } = useHistory();
   const [selectedValue, setSelectedValue] = useState("");
+  const themeColor = useColorScheme();
   const handleItem = () => {};
   const handleColor = (types: number): string => {
     if (types === 16) return "green";
@@ -25,6 +28,12 @@ export default function TabTwoScreen() {
   return (
     <ThemedView style={styles.container}>
       <StatusBar hidden={true} />
+      <ThemedView style={styles.header}>
+        <ThemedText style={styles.headertext}>No.</ThemedText>
+        <ThemedText style={styles.headertext}>Items</ThemedText>
+        <ThemedText style={styles.headertext}>Weight</ThemedText>
+        <ThemedText style={styles.headertext}>Price</ThemedText>
+      </ThemedView>
       <FlatList
         data={history}
         ListEmptyComponent={() => (
@@ -37,23 +46,18 @@ export default function TabTwoScreen() {
             </ThemedText>
           </ThemedView>
         )}
-        ListHeaderComponent={() => (
-          <ThemedView style={styles.header}>
-            <ThemedText style={styles.headertext}>No.</ThemedText>
-            <ThemedText style={styles.headertext}>Items</ThemedText>
-            <ThemedText style={styles.headertext}>Weight</ThemedText>
-            <ThemedText style={styles.headertext}>Price</ThemedText>
-          </ThemedView>
-        )}
         renderItem={({ item, index }) => (
           <ThemedView
             key={index}
             style={[styles.box, { borderColor: handleColor(item.types) }]}
           >
-            <ThemedText>{index + 1}</ThemedText>
+            <ThemedText style={{ flex: 1 }}>{index + 1}</ThemedText>
             <Picker
               selectedValue={selectedValue}
-              style={styles.picker}
+              style={[
+                styles.picker,
+                { color: themeColor === "dark" ? "white" : "black" },
+              ]}
               onValueChange={(itemValue) => handleItem()}
             >
               <Picker.Item label="လက်စွပ်" value="လက်စွပ်" />
@@ -61,8 +65,13 @@ export default function TabTwoScreen() {
               <Picker.Item label="နားကပ်" value="နားကပ်" />
               <Picker.Item label="လက်ကောက်" value="လက်ကောက်" />
             </Picker>
-            <ThemedText>{item.weight}</ThemedText>
-            <ThemedText type="subtitle">
+            <ThemedText style={{ flex: 1, textAlign: "right" }}>
+              {item.weight}
+            </ThemedText>
+            <ThemedText
+              type="subtitle"
+              style={{ width: "30%", textAlign: "right" }}
+            >
               {item.price.toLocaleString()}
             </ThemedText>
           </ThemedView>
@@ -97,12 +106,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 5,
   },
-
   header: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 20,
+    marginVertical: 10,
   },
   headertext: {
     fontSize: windowWidth > 500 ? 25 : 20,
@@ -122,5 +130,6 @@ const styles = StyleSheet.create({
   picker: {
     height: "100%",
     width: 200,
+    flex: 1,
   },
 });
