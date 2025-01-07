@@ -1,11 +1,10 @@
 import {
-  StyleSheet,
   FlatList,
   Dimensions,
   TouchableOpacity,
   Text,
-  View,
   StatusBar,
+  StyleSheet,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -51,7 +50,13 @@ export default function TabTwoScreen() {
             key={index}
             style={[styles.box, { borderColor: handleColor(item.types) }]}
           >
-            <ThemedText style={{ flex: 1 }}>{index + 1}</ThemedText>
+            <ThemedText
+              style={{
+                width: 30,
+              }}
+            >
+              {index + 1}
+            </ThemedText>
             <Picker
               selectedValue={selectedValue}
               style={[
@@ -65,12 +70,15 @@ export default function TabTwoScreen() {
               <Picker.Item label="နားကပ်" value="နားကပ်" />
               <Picker.Item label="လက်ကောက်" value="လက်ကောက်" />
             </Picker>
-            <ThemedText style={{ flex: 1, textAlign: "right" }}>
+            <ThemedText style={{ flex: 0.3, textAlign: "center" }}>
               {item.weight}
             </ThemedText>
             <ThemedText
               type="subtitle"
-              style={{ width: "30%", textAlign: "right" }}
+              style={{
+                width: "31%",
+                textAlign: "right",
+              }}
             >
               {item.price.toLocaleString()}
             </ThemedText>
