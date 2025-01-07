@@ -11,6 +11,8 @@ import {
   Keyboard,
   Modal,
   Button,
+  NativeModules,
+  Platform,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -32,6 +34,7 @@ export default function HomeScreen() {
     goldPriceError: "",
     goldWeightError: "",
   });
+  const { NavigationBarManager } = NativeModules;
 
   const { addHistoryItem } = useHistory();
 
@@ -105,8 +108,22 @@ export default function HomeScreen() {
       console.error("Failed to fetch the data", e);
     }
   };
+
   useEffect(() => {
     getData("goldPrice").then((data) => setGoldPrice(data || ""));
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS === "android" && NavigationBarManager) {
+      const enableImmersiveMode = () => {
+        NavigationBarManager.setSystemUiVisibility("immersive");
+      };
+
+      // Re-enable immersive mode after user interaction
+      const interval = setInterval(enableImmersiveMode, 500); // Adjust timing as needed
+
+      return () => clearInterval(interval); // Cleanup the interval
+    }
   }, []);
 
   return (
