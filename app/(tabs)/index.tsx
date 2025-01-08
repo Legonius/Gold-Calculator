@@ -11,8 +11,6 @@ import {
   Keyboard,
   Modal,
   Button,
-  NativeModules,
-  Platform,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -22,6 +20,7 @@ import { StatusBar } from "expo-status-bar";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useHistory } from "@/HistoryContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Audio } from "expo-av";
 
 export default function HomeScreen() {
   const colorTheme = useThemeColor({ light: "black", dark: "white" }, "text");
@@ -34,9 +33,15 @@ export default function HomeScreen() {
     goldPriceError: "",
     goldWeightError: "",
   });
-  const { NavigationBarManager } = NativeModules;
 
   const { addHistoryItem } = useHistory();
+  //audio
+  async function playSound() {
+    const { sound } = await Audio.Sound.createAsync(
+      require("@/assets/sounds/chat-sound.mp3") // Path to your sound file
+    );
+    await sound.playAsync();
+  }
 
   const checkErrors = () => {
     let hasError = false;
@@ -87,6 +92,7 @@ export default function HomeScreen() {
     });
     setModalVisible(false);
     storeData("goldPrice", goldPrice);
+    playSound();
   };
 
   // Save data
@@ -111,19 +117,6 @@ export default function HomeScreen() {
 
   useEffect(() => {
     getData("goldPrice").then((data) => setGoldPrice(data || ""));
-  }, []);
-
-  useEffect(() => {
-    if (Platform.OS === "android" && NavigationBarManager) {
-      const enableImmersiveMode = () => {
-        NavigationBarManager.setSystemUiVisibility("immersive");
-      };
-
-      // Re-enable immersive mode after user interaction
-      const interval = setInterval(enableImmersiveMode, 500); // Adjust timing as needed
-
-      return () => clearInterval(interval); // Cleanup the interval
-    }
   }, []);
 
   return (
@@ -213,7 +206,12 @@ export default function HomeScreen() {
 
             <ThemedView style={styles.stepContainer1}>
               <ThemedText type="title">Grand Total</ThemedText>
-              <Text style={[styles.total, { color: colorTheme }]}>
+              <Text
+                style={[
+                  styles.total,
+                  { color: totalPrice > 0 ? "green" : colorTheme },
+                ]}
+              >
                 {totalPrice.toLocaleString()}
               </Text>
             </ThemedView>
@@ -222,49 +220,59 @@ export default function HomeScreen() {
               <Text style={[styles.button, { color: "white" }]}>Calculate</Text>
             </TouchableOpacity>
           </View>
+
+          <Modal
+            animationType="slide" // Options: 'slide', 'fade', 'none'
+            transparent={true} // Makes the background semi-transparent
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(false);
+            }}
+          >
+            <ThemedView style={styles.modalBackground}>
+              <ThemedView style={styles.modalContent}>
+                <ThemedText
+                  type="title"
+                  style={{ textAlign: "center", color: "black" }}
+                >
+                  Select Gold Types
+                </ThemedText>
+                <View style={styles.modalButtonBox}>
+                  <TouchableOpacity
+                    style={[
+                      styles.calculateButtons,
+                      { backgroundColor: "green" },
+                    ]}
+                    onPress={() => calculateGoldPrice(128, 16)}
+                  >
+                    <Text style={styles.buttonTextModal}>16</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.calculateButtons,
+                      { backgroundColor: "orange" },
+                    ]}
+                    onPress={() => calculateGoldPrice(136, 15)}
+                  >
+                    <Text style={styles.buttonTextModal}>15</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.calculateButtons,
+                      { backgroundColor: "red" },
+                    ]}
+                    onPress={() => calculateGoldPrice(140, 14.5)}
+                  >
+                    <Text style={styles.buttonTextModal}>14.5</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <Button title="cancel" onPress={() => setModalVisible(false)} />
+              </ThemedView>
+            </ThemedView>
+          </Modal>
         </SafeAreaView>
       </TouchableWithoutFeedback>
-      <Modal
-        animationType="fade" // Options: 'slide', 'fade', 'none'
-        transparent={true} // Makes the background semi-transparent
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(false);
-        }}
-      >
-        <ThemedView style={styles.modalBackground}>
-          <ThemedView style={styles.modalContent}>
-            <ThemedText
-              type="title"
-              style={{ textAlign: "center", color: "black" }}
-            >
-              Select Gold Types
-            </ThemedText>
-            <View style={styles.modalButtonBox}>
-              <TouchableOpacity
-                style={[styles.calculateButtons, { backgroundColor: "green" }]}
-                onPress={() => calculateGoldPrice(128, 16)}
-              >
-                <Text style={styles.buttonTextModal}>16</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.calculateButtons, { backgroundColor: "orange" }]}
-                onPress={() => calculateGoldPrice(136, 15)}
-              >
-                <Text style={styles.buttonTextModal}>15</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.calculateButtons, { backgroundColor: "red" }]}
-                onPress={() => calculateGoldPrice(140, 14.5)}
-              >
-                <Text style={styles.buttonTextModal}>14.5</Text>
-              </TouchableOpacity>
-            </View>
-
-            <Button title="cancel" onPress={() => setModalVisible(false)} />
-          </ThemedView>
-        </ThemedView>
-      </Modal>
     </KeyboardAvoidingView>
   );
 }
@@ -287,6 +295,7 @@ const styles = StyleSheet.create({
   stepContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     gap: 5,
     marginBottom: 0,
     backgroundColor: "transparent",
@@ -313,7 +322,7 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   total: {
-    fontSize: windowWindth > 500 ? 50 : 30,
+    fontSize: windowWindth > 500 ? 50 : 35,
     fontWeight: 700,
   },
   errorText: {

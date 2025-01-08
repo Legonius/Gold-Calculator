@@ -5,6 +5,7 @@ import {
   Text,
   StatusBar,
   StyleSheet,
+  SafeAreaView,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -25,73 +26,75 @@ export default function TabTwoScreen() {
   };
 
   return (
-    <ThemedView style={styles.container}>
-      <StatusBar hidden={true} />
-      <ThemedView style={styles.header}>
-        <ThemedText style={styles.headertext}>No.</ThemedText>
-        <ThemedText style={styles.headertext}>Items</ThemedText>
-        <ThemedText style={styles.headertext}>Weight</ThemedText>
-        <ThemedText style={styles.headertext}>Price</ThemedText>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ThemedView style={styles.container}>
+        <StatusBar hidden={true} />
+        <ThemedView style={styles.header}>
+          <ThemedText style={styles.headertext}>No.</ThemedText>
+          <ThemedText style={styles.headertext}>Items</ThemedText>
+          <ThemedText style={styles.headertext}>Weight</ThemedText>
+          <ThemedText style={styles.headertext}>Price</ThemedText>
+        </ThemedView>
+        <FlatList
+          data={history}
+          ListEmptyComponent={() => (
+            <ThemedView>
+              <ThemedText
+                // type="title"
+                style={{ textAlign: "center", marginVertical: 30 }}
+              >
+                History is Empty
+              </ThemedText>
+            </ThemedView>
+          )}
+          renderItem={({ item, index }) => (
+            <ThemedView
+              key={index}
+              style={[styles.box, { borderColor: handleColor(item.types) }]}
+            >
+              <ThemedText
+                style={{
+                  width: 30,
+                }}
+              >
+                {index + 1}
+              </ThemedText>
+              <Picker
+                selectedValue={selectedValue}
+                style={[
+                  styles.picker,
+                  { color: themeColor === "dark" ? "white" : "black" },
+                ]}
+                onValueChange={(itemValue) => handleItem()}
+              >
+                <Picker.Item label="လက်စွပ်" value="လက်စွပ်" />
+                <Picker.Item label="ဆွဲကြိုး" value="ဆွဲကြိုး" />
+                <Picker.Item label="နားကပ်" value="နားကပ်" />
+                <Picker.Item label="လက်ကောက်" value="လက်ကောက်" />
+              </Picker>
+              <ThemedText style={{ flex: 0.3, textAlign: "center" }}>
+                {item.weight}
+              </ThemedText>
+              <ThemedText
+                type="subtitle"
+                style={{
+                  width: "31%",
+                  textAlign: "right",
+                }}
+              >
+                {item.price.toLocaleString()}
+              </ThemedText>
+            </ThemedView>
+          )}
+        />
+        <TouchableOpacity
+          onLongPress={() => clearHistory()}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Clear All</Text>
+        </TouchableOpacity>
       </ThemedView>
-      <FlatList
-        data={history}
-        ListEmptyComponent={() => (
-          <ThemedView>
-            <ThemedText
-              // type="title"
-              style={{ textAlign: "center", marginVertical: 30 }}
-            >
-              History is Empty
-            </ThemedText>
-          </ThemedView>
-        )}
-        renderItem={({ item, index }) => (
-          <ThemedView
-            key={index}
-            style={[styles.box, { borderColor: handleColor(item.types) }]}
-          >
-            <ThemedText
-              style={{
-                width: 30,
-              }}
-            >
-              {index + 1}
-            </ThemedText>
-            <Picker
-              selectedValue={selectedValue}
-              style={[
-                styles.picker,
-                { color: themeColor === "dark" ? "white" : "black" },
-              ]}
-              onValueChange={(itemValue) => handleItem()}
-            >
-              <Picker.Item label="လက်စွပ်" value="လက်စွပ်" />
-              <Picker.Item label="ဆွဲကြိုး" value="ဆွဲကြိုး" />
-              <Picker.Item label="နားကပ်" value="နားကပ်" />
-              <Picker.Item label="လက်ကောက်" value="လက်ကောက်" />
-            </Picker>
-            <ThemedText style={{ flex: 0.3, textAlign: "center" }}>
-              {item.weight}
-            </ThemedText>
-            <ThemedText
-              type="subtitle"
-              style={{
-                width: "31%",
-                textAlign: "right",
-              }}
-            >
-              {item.price.toLocaleString()}
-            </ThemedText>
-          </ThemedView>
-        )}
-      />
-      <TouchableOpacity
-        onLongPress={() => clearHistory()}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Clear All</Text>
-      </TouchableOpacity>
-    </ThemedView>
+    </SafeAreaView>
   );
 }
 const windowWidth = Dimensions.get("window").width;

@@ -19,7 +19,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarLabelStyle: {
-          fontSize: windowDimensions.width > 500 ? 30 : 25,
+          fontSize: windowDimensions.width > 500 ? 30 : 20,
         },
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -27,7 +27,7 @@ export default function TabLayout() {
             // Use a transparent background on iOS to show the blur effect
             position: "absolute",
           },
-          android: { height: windowDimensions.width > 500 ? 120 : 60 },
+          android: { height: windowDimensions.width > 500 ? 100 : 80 },
           default: {},
         }),
         tabBarLabelPosition: "below-icon",
@@ -40,7 +40,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <AntDesign
               name="calculator"
-              size={windowDimensions.width > 500 ? 35 : 28}
+              size={windowDimensions.width > 500 ? 30 : 20}
               color={color}
             />
           ),
@@ -53,7 +53,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <Foundation
               name="clipboard-notes"
-              size={windowDimensions.width > 500 ? 35 : 28}
+              size={windowDimensions.width > 500 ? 30 : 20}
               color={color}
             />
           ),
