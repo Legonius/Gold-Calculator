@@ -65,12 +65,14 @@ export default function TabTwoScreen() {
                   styles.picker,
                   { color: themeColor === "dark" ? "white" : "black" },
                 ]}
+                itemStyle={styles.items}
                 onValueChange={(itemValue) => handleItem()}
               >
                 <Picker.Item label="လက်စွပ်" value="လက်စွပ်" />
                 <Picker.Item label="ဆွဲကြိုး" value="ဆွဲကြိုး" />
                 <Picker.Item label="နားကပ်" value="နားကပ်" />
                 <Picker.Item label="လက်ကောက်" value="လက်ကောက်" />
+                <Picker.Item label="အခြား" value="အခြား" />
               </Picker>
               <ThemedText style={{ flex: 0.3, textAlign: "center" }}>
                 {item.weight}
@@ -139,8 +141,9 @@ const styles = StyleSheet.create({
     fontSize: windowWidth > 500 ? 35 : 25,
   },
   picker: {
-    height: "100%",
-    width: 200,
     flex: 1,
+    height: "100%",
+    textAlign: "center",
   },
+  items: { textAlign: "center" },
 });
